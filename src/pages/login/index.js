@@ -1,7 +1,7 @@
 import './index.scss'
 import logo from '@/assets/logo.png'
 import { Card, Form, Input, Button, message } from 'antd'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { fetchLogin } from '@/store/modules/userStore'
 import { useDispatch } from 'react-redux'
 // const logo = require('@/assets/logo.png')
@@ -19,8 +19,7 @@ const Login = () => {
     return (
         <div className="login">
             <Card className="login-container">
-                <img className="login-logo" src={logo} alt="" />
-                {/* 登录表单 */}
+                <img className="login-logo" src={logo} alt="" /> 
                 <Form validateTrigger="onBlur" onFinish={handleFormSubmit}>
                     <Form.Item name="mobile" label="手机号" rules={[
                         { required: true, message: '请输入手机号' },

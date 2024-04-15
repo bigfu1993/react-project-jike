@@ -39,9 +39,8 @@ const userReducer = userStore.reducer
 // 登录获取token异步方法封装
 const fetchLogin = (loginForm) => {
     return async (dispatch) => {
-        // const res = await loginAPI(loginForm)
-        // dispatch(setToken(res.data.token))
-        dispatch(setToken('123'))
+        const res = await loginAPI(loginForm)
+        dispatch(setToken(res.data.token))
     }
 }
 
