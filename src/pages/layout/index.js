@@ -5,7 +5,7 @@ import {
     EditOutlined,
     LogoutOutlined,
 } from '@ant-design/icons'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import './index.scss'
 
@@ -35,6 +35,8 @@ const GeekLayout = () => {
         console.log(menuData)
         navigate(menuData.key)
     }
+    const location = useLocation()
+    console.log(location.pathname);
     return (
         <Layout>
             <Header className="header">
@@ -53,7 +55,7 @@ const GeekLayout = () => {
                     <Menu
                         mode="inline"
                         theme="dark"
-                        defaultSelectedKeys={['1']}
+                        selectedKeys={[location.pathname]}
                         items={items}
                         style={{ height: '100%', borderRight: 0 }}
                         onSelect={handleMenuSelect}></Menu>
