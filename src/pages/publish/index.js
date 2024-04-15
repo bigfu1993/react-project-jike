@@ -7,7 +7,8 @@ import {
     Input,
     Upload,
     Space,
-    Select
+    Select,
+    message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -15,7 +16,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.scss'
 import { useEffect, useState } from 'react'
-import { getChannelAPI } from '@/apis/modules/article'
+import { getChannelAPI, createArticleAPI } from '@/apis/modules/article'
 
 const { Option } = Select
 
@@ -32,8 +33,57 @@ const Publish = () => {
         { title: <Link to={'/'}>首页</Link> },
         { title: '发布文章' }
     ]
-    const [channels, setChannels] = useState([])
+    // 
 
+    // channel
+    const [channels, setChannels] = useState([])
+    // 上传回调
+    const [imageList, setImageList] = useState([])
+    const onChange = (value) => {
+        console.log('正在上传中', value)
+        setImageList(value.fileList)
+    }
+
+    // 切换图片封面类型
+    const [imageType, setImageType] = useState(0)
+    const onTypeChange = (e) => {
+        console.log('切换封面了', e.target.value)
+        setImageType(e.target.value)
+    }
+
+    const handleFormSubmit = (formData) => {
+        console.log(formData)
+        const { title, content, channel_id } = formData
+        // 校验封面类型imageType是否和实际的图片列表imageList数量是相等的
+        // if (imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
+        // 1. 按照接口文档的格式处理收集到的表单数据
+        const reqData = {
+            title,
+            channel_id,
+            content,
+            cover: {
+                type: imageType, // 封面模式
+                // 这里的url处理逻辑只是在新增时候的逻辑
+                // 编辑的时候需要做处理
+                images: imageList.map(item => {
+                    if (item.response) {
+                        return item.response.data.url
+                    } else {
+                        return item.url
+                    }
+                }) || [] // 图片列表
+            },
+        }
+        createArticleAPI(reqData)
+        // // 2. 调用接口提交
+        // // 处理调用不同的接口 新增 - 新增接口  编辑状态 - 更新接口  id
+        // if (articleId) {
+        //     // 更新接口
+        //     updateArticleAPI({ ...reqData, id: articleId })
+        // } else {
+        //     createArticleAPI(reqData)
+        // }
+    }
     return (
         <div className="publish">
             <Card title={<Breadcrumb items={breadItems} />} >
@@ -41,6 +91,7 @@ const Publish = () => {
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
                     initialValues={{ type: 1 }}
+                    onFinish={handleFormSubmit}
                 >
                     <Form.Item
                         label="标题"
