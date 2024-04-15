@@ -6,6 +6,9 @@ import router from './router';
 import store from './store';
 // import App from './App';
 
+import 'normalize.css'
+import  './index.scss';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
