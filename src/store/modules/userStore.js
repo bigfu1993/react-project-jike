@@ -41,7 +41,6 @@ const fetchLogin = (loginForm) => {
     return async (dispatch) => {
         // const res = await loginAPI(loginForm)
         // dispatch(setToken(res.data.token))
-        
         dispatch(setToken('123'))
     }
 }
