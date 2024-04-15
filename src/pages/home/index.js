@@ -5,8 +5,8 @@ const Home = () => {
 
     return (
         <div>
-            <BarChart title={'三大框架满意度1'} style={{ width: '400px', height: '400px' }} />
-            <LineChart title={'三大框架使用度2'} style={{ width: '400px', height: '400px' }} />
+            <BarChart title={'服装调查'} style={{ width: '400px', height: '400px' }} />
+            <LineChart title={'购买力趋势'} style={{ width: '400px', height: '400px' }} />
         </div>
     )
 }
