@@ -1,12 +1,16 @@
 import './index.scss'
 import { Card, Form, Input, Button } from 'antd'
 import logo from '@/assets/logo.png'
+import { fetchLogin } from '@/store/modules/userStore'
+import { useDispatch } from 'react-redux'
 // const logo = require('@/assets/logo.png')
 
 
 const Login = () => {
-    const handleFormSubmit = (values)=>{
-        console.log(values)
+    const dispatch = useDispatch()
+    const handleFormSubmit = (foramData)=>{
+        console.log(foramData)
+        dispatch(fetchLogin(foramData))
     }
     return (
         <div className="login">
