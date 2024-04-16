@@ -1,11 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 
 import AuthRoute from '@/components/AuthRoute'
 import Layout from '@/pages/layout'
-import Login from '@/pages/login'
-import Home from '@/pages/home'
-import Article from '@/pages/article'
-import Publish from '@/pages/publish'
+
+const Login = lazy(() => import('@/pages/login'))
+const Home = lazy(() => import('@/pages/home'))
+const Article = lazy(() => import('@/pages/article'))
+const Publish = lazy(() => import('@/pages/publish'))
 
 
 
@@ -17,15 +19,27 @@ const router = createBrowserRouter([
             {
                 index: true,
                 // path: 'home',
-                element: <Home />
+                element: (
+                    <Suspense fallback={'加载中'}>
+                        <Home />
+                    </Suspense>
+                )
             },
             {
                 path: 'article',
-                element: <Article />
+                element: (
+                    <Suspense fallback={'加载中'}>
+                        <Article />
+                    </Suspense>
+                )
             },
             {
                 path: 'publish',
-                element: <Publish />
+                element: (
+                    <Suspense fallback={'加载中'}>
+                        <Publish />
+                    </Suspense>
+                )
             }
         ]
     },
