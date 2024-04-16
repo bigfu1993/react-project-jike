@@ -39,14 +39,14 @@ const Publish = () => {
     const [channels, setChannels] = useState([])
     // 上传回调
     const [imageList, setImageList] = useState([])
-    const onChange = (value) => {
-        console.log('正在上传中', value)
-        setImageList(value.fileList)
+    const handleUpload = (uploadData) => {
+        console.log('正在上传中', uploadData)
+        setImageList(uploadData.fileList)
     }
 
     // 切换图片封面类型
     const [imageType, setImageType] = useState(0)
-    const onTypeChange = (e) => {
+    const handleTypeChange = (e) => {
         console.log('切换封面了', e.target.value)
         setImageType(e.target.value)
     }
@@ -71,7 +71,7 @@ const Publish = () => {
                     } else {
                         return item.url
                     }
-                }) || [] // 图片列表
+                }) // 图片列表
             },
         }
         createArticleAPI(reqData)
@@ -108,6 +108,28 @@ const Publish = () => {
                         <Select placeholder="请选择文章频道" style={{ width: 400 }}>
                             {channels.map(ch => <Option key={ch.id} value={ch.id}>{ch.name}</Option>)}
                         </Select>
+                    </Form.Item>
+                    <Form.Item label="封面">
+                        <Form.Item name="type">
+                            <Radio.Group onChange={handleTypeChange}>
+                                <Radio value={1}>单图</Radio>
+                                <Radio value={3}>三图</Radio>
+                                <Radio value={0}>无图</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                        {imageType > 0 && <Upload
+                            listType="picture-card"
+                            showUploadList
+                            action={'http://geek.itheima.net/v1_0/upload'}
+                            name='image'
+                            maxCount={imageType}
+                            fileList={imageList}
+                            onChange={handleUpload}
+                        >
+                            <div style={{ marginTop: 8 }}>
+                                <PlusOutlined />
+                            </div>
+                        </Upload>}
                     </Form.Item>
                     <Form.Item
                         label="内容"
