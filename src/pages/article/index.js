@@ -1,22 +1,90 @@
 import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Card, Space, Tag, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import Table from './components/Table'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchChannels } from '@/store/modules/articleStore'
 import { useDispatch, useSelector } from 'react-redux'
 import { useChannel } from '@/hooks/useChannel'
+import img404 from '@/assets/error.png'
+import { getArticleListAPI } from '@/apis/modules/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 export default function Article() {
     // let dispatch = useDispatch()
-    // let channelsList = useSelector(state => state.article.channelsList)
+    // let channels = useSelector(state => state.article.channelsList)
     // useEffect(() => {
     //     dispatch(fetchChannels())
     // }, [])
-    const { channels: channelsList } = useChannel()
+    let [list, setList] = useState([])
+    let [count, setCount] = useState(0)
+    useEffect(() => {
+        async function fetchArticleList() {
+            let res = await getArticleListAPI()
+            setList(res.data.results)
+            setCount(res.data.total_count)
+        }
+        fetchArticleList()
+    }, [])
+    const { channels } = useChannel()
+
+    // 准备列数据
+    const columns = [
+        {
+            title: '封面',
+            dataIndex: 'cover',
+            width: 120,
+            render: cover => {
+                return <img src={cover.images[0] || img404} width={80} height={60} alt="" />
+            }
+        },
+        {
+            title: '标题',
+            dataIndex: 'title',
+            width: 220
+        },
+        {
+            title: '状态',
+            dataIndex: 'status',
+            render: data => <Tag color="green">审核通过</Tag>
+        },
+        {
+            title: '发布时间',
+            dataIndex: 'pubdate'
+        },
+        {
+            title: '阅读数',
+            dataIndex: 'read_count'
+        },
+        {
+            title: '评论数',
+            dataIndex: 'comment_count'
+        },
+        {
+            title: '点赞数',
+            dataIndex: 'like_count'
+        },
+        {
+            title: '操作',
+            render: data => {
+                return (
+                    <Space size="middle">
+                        <Button type="primary" shape="circle" icon={<EditOutlined />} />
+                        <Button
+                            type="primary"
+                            danger
+                            shape="circle"
+                            icon={<DeleteOutlined />}
+                        />
+                    </Space>
+                )
+            }
+        }
+    ]
+
     return (
         <div>
             <Card
@@ -42,7 +110,7 @@ export default function Article() {
                             placeholder="请选择文章频道"
                             style={{ width: 120 }}
                         >
-                            {channelsList.map(channel => <Option key={channel.id} value={channel.id} >{channel.name} </Option>)}
+                            {channels.map(channel => <Option key={channel.id} value={channel.id} >{channel.name} </Option>)}
                         </Select>
                     </Form.Item>
 
@@ -58,7 +126,7 @@ export default function Article() {
                     </Form.Item>
                 </Form>
             </Card>
-            <Table></Table>
+            <Table columns={columns} data={list} count={count}></Table>
         </div>
     )
 }

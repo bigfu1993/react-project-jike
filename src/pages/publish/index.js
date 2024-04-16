@@ -21,6 +21,8 @@ import { getChannelAPI, createArticleAPI } from '@/apis/modules/article'
 const { Option } = Select
 
 const Publish = () => {
+    // channel
+    const [channels, setChannels] = useState([])
     useEffect(() => {
         async function fetchChannels() {
             let res = await getChannelAPI()
@@ -35,8 +37,6 @@ const Publish = () => {
     ]
     // 
 
-    // channel
-    const [channels, setChannels] = useState([])
     // 上传回调
     const [imageList, setImageList] = useState([])
     const handleUpload = (uploadData) => {
