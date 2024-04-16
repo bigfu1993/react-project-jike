@@ -19,17 +19,22 @@ export default function Article() {
     // useEffect(() => {
     //     dispatch(fetchChannels())
     // }, [])
+
+
+    const { channels } = useChannel()
+
     let [list, setList] = useState([])
     let [count, setCount] = useState(0)
-    useEffect(() => {
-        async function fetchArticleList() {
-            let res = await getArticleListAPI()
-            setList(res.data.results)
-            setCount(res.data.total_count)
-        }
-        fetchArticleList()
-    }, [])
-    const { channels } = useChannel()
+    // 筛选功能
+    // 1. 准备参数
+    let [reqData, setReqData] = useState({
+        status: '',
+        channel_id: '',
+        begin_pubdate: '',
+        end_pubdate: '',
+        page: 1,
+        per_page: 4
+    })
 
     // 准备列数据
     const columns = [
@@ -49,7 +54,7 @@ export default function Article() {
         {
             title: '状态',
             dataIndex: 'status',
-            render: data => <Tag color={data==1?"warning":'green'}>{data == 1 ? '待审核' : '审核通过'}</Tag>
+            render: data => <Tag color={data == 1 ? "warning" : 'green'}>{data == 1 ? '待审核' : '审核通过'}</Tag>
         },
         {
             title: '发布时间',
@@ -84,7 +89,27 @@ export default function Article() {
             }
         }
     ]
-
+    useEffect(() => {
+        async function fetchArticleList() {
+            let res = await getArticleListAPI(reqData)
+            setList(res.data.results)
+            setCount(res.data.total_count)
+        }
+        fetchArticleList()
+    }, [reqData])
+    function handleFilter(formValue) {
+        console.log(formValue)
+        // 3. 把表单收集到数据放到参数中(不可变的方式)
+        setReqData({
+            ...reqData,
+            channel_id: formValue.channel_id,
+            status: formValue.status,
+            begin_pubdate: formValue.date && formValue.date[0].format('YYYY-MM-DD'),
+            end_pubdate: formValue.date && formValue.date[1].format('YYYY-MM-DD')
+        })
+        // 4. 重新拉取文章列表 + 渲染table逻辑重复的 - 复用
+        // reqData依赖项发生变化 重复执行副作用函数 
+    }
     return (
         <div>
             <Card
@@ -96,7 +121,7 @@ export default function Article() {
                 }
                 style={{ marginBottom: 20 }}
             >
-                <Form initialValues={{ status: '' }}>
+                <Form initialValues={{ status: '' }} onFinish={handleFilter}>
                     <Form.Item label="状态" name="status">
                         <Radio.Group>
                             <Radio value={''}>全部</Radio>
