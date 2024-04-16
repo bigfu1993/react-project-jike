@@ -53,9 +53,9 @@ const Publish = () => {
 
     const handleFormSubmit = (formData) => {
         console.log(formData)
+        if (imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
         const { title, content, channel_id } = formData
         // 校验封面类型imageType是否和实际的图片列表imageList数量是相等的
-        // if (imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
         // 1. 按照接口文档的格式处理收集到的表单数据
         const reqData = {
             title,
@@ -75,6 +75,7 @@ const Publish = () => {
             },
         }
         createArticleAPI(reqData)
+        message.success('发布文章成功')
         // // 2. 调用接口提交
         // // 处理调用不同的接口 新增 - 新增接口  编辑状态 - 更新接口  id
         // if (articleId) {
@@ -90,7 +91,7 @@ const Publish = () => {
                 <Form
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
-                    initialValues={{ type: 1 }}
+                    initialValues={{ type: 0 }}
                     onFinish={handleFormSubmit}
                 >
                     <Form.Item
