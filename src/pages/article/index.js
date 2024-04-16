@@ -110,6 +110,15 @@ export default function Article() {
         // 4. 重新拉取文章列表 + 渲染table逻辑重复的 - 复用
         // reqData依赖项发生变化 重复执行副作用函数 
     }
+      // 分页
+  function onPageChange(page) {
+    console.log(page)
+    // 修改参数依赖项 引发数据的重新获取列表渲染
+    setReqData({
+      ...reqData,
+      page
+    })
+  }
     return (
         <div>
             <Card
@@ -151,7 +160,7 @@ export default function Article() {
                     </Form.Item>
                 </Form>
             </Card>
-            <Table columns={columns} data={list} count={count}></Table>
+            <Table columns={columns} data={list} count={count} reqData={reqData} onPageChange={onPageChange}></Table>
         </div>
     )
 }
