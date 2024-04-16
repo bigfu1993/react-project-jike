@@ -49,7 +49,7 @@ export default function Article() {
         {
             title: '状态',
             dataIndex: 'status',
-            render: data => <Tag color="green">审核通过</Tag>
+            render: data => <Tag color={data==1?"warning":'green'}>{data == 1 ? '待审核' : '审核通过'}</Tag>
         },
         {
             title: '发布时间',
